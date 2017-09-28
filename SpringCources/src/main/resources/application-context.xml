@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       default-destroy-method="destroyObject"
+       default-init-method="initObject"
+       default-lazy-init="true"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="sony-context.xml"/>
+    <import resource="toshiba-context.xml"/>
+
+    <!--We can used implements robot using both constructor and getters/setters -->
+    <!--First will be getters/setters and if some property not set it will used constructor argument (that not set)for default-->
+
+    <bean id="t1000" class="impl.robots.T1000" lazy-init="true">
+                <!--Create object throw constructor (used to apply parameters before object creation)-->
+                <!--<constructor-arg index="0" ref="sonyHand"/>-->
+                <!--<constructor-arg index="1" ref="sonyLeg"/>-->
+                <!--<constructor-arg index="2" ref="sonyHead"/>-->
+
+                <!--Value is a property that set not throw the reference-->
+                <constructor-arg index="0" name="color" value="silver" type="java.lang.String"/>
+                <constructor-arg index="1" name="year" value="2017" type="int"/>
+                <constructor-arg index="2" name="soundEnable" value="true" type="boolean"/>
+
+                <!--Create object throw getters/setters(used to apply parameters after object creation)-->
+                <property name="hand" ref="toshibaHand"/>
+                <property name="leg" ref="toshibaLeg"/>
+                <property name="head" ref="toshibaHead"/>
+                <!--<property name="color" value="silver"/>-->
+                <!--<property name="year" value="2017"/>-->
+                <!--<property name="soundEnable" value="true"/>-->
+    </bean>
+
+    <bean id="t1000Empty" class="impl.robots.T1000"
+          p:hand-ref="toshibaHand"
+          p:leg-ref="toshibaLeg"
+          p:head-ref="sonyHead"
+          lazy-init="true"
+    ></bean>
+
+    <bean id="t1000Constructor" class="impl.robots.T1000"
+          c:color="yellow"
+          c:year="2010"
+          c:soundEnable="false"
+          scope="prototype"
+          lazy-init="true"
+    >
+        <!--Write in bean-->
+        <!--destroy-method="destroyObject"-->
+        <!--init-method="initObject"-->
+        <property name="hand" ref="toshibaHand"/>
+        <property name="leg" ref="toshibaLeg"/>
+        <property name="head" ref="toshibaHead"/>
+    </bean>
+
+    <!--To all objects-->
+    <!--<bean class="start.MyBeanLifeProcessor"/>-->
+</beans>
